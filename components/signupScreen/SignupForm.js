@@ -6,19 +6,20 @@ import { Formik } from 'formik'
 import Validator from 'email-validator'
 
 
-const SignupForm = () => {
-  const LoginFormSchema = yup.object().shape({
+const SignupForm = ({navigation}) => {
+  const SignupFormSchema = yup.object().shape({
     email: yup.string().email().required('An email is required'),
+    username: yup.string().required().min(2, 'A username is required'),
     password: yup.string().required().min(6, 'Your password has to be at least 8 characters')
   })
   return (
     <View style={styles.wrapper}>
       <Formik
-      initialValues={{email:'', password:''}}
+      initialValues={{email:'', username:'', password:''}}
       onSubmit={(values)=>{
         console.log(values)
       }}
-      validationSchema={LoginFormSchema}
+      validationSchema={SignupFormSchema}
       validateOnMount={true}
       >
         {({handleChange, handleBlur, handleSubmit, values, isValid})=>(
@@ -34,7 +35,7 @@ const SignupForm = () => {
             ]}>
               <TextInput
               placeholderTextColor='#444'
-              placeholder='Phone number, username or email'
+              placeholder='Email'
               autoCapitalize='none'
               keyboardType='email-address'
               textContentType='emailAddress'
@@ -42,6 +43,27 @@ const SignupForm = () => {
               onChangeText={handleChange('email')}
               onBlur={handleBlur('email')}
               value={values.email}
+              />
+            </View>
+
+            <View style={[
+              styles.inputField,
+              {
+                borderColor: 
+                  1 > values.username.length || values.username.length >=6
+                    ? '#ccc'
+                    : 'red'
+              }
+            ]}>
+              <TextInput
+              placeholderTextColor='#444'
+              placeholder='username'
+              autoCapitalize='none'
+              textContentType='username'
+              autoFocus={true}
+              onChangeText={handleChange('username')}
+              onBlur={handleBlur('username')}
+              value={values.username}
               />
             </View>
             <View style={[
@@ -76,13 +98,13 @@ const SignupForm = () => {
               onPress={handleSubmit}
               disabled={!isValid}
             >
-              <Text style={styles.buttonText}>Log in </Text>
+              <Text style={styles.buttonText}>Sign Up </Text>
             </Pressable>
 
             <View style={styles.signupContainer}>
-              <Text>Dont have an account yet?</Text>
-              <TouchableOpacity>
-                <Text style={{color:"#6BB0F5"}}> Sign up</Text>
+              <Text>Already have an account?</Text>
+              <TouchableOpacity onPress={()=>navigation.push('LoginScreen')}>
+                <Text style={{color:"#6BB0F5"}}>  Log in</Text>
               </TouchableOpacity>
             </View>
           </>
