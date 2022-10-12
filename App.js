@@ -1,15 +1,15 @@
-import { View, Text } from "react-native";
+import { View, Text, Pl } from "react-native";
+import SigneInStack from "./navigation"; 
 
 export default function App() {
   return (
     <View
       style={{
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
+        paddingTop: Platform.OS === 'android' ? 25 : 0
       }}
     >
-      <Text>Universal React with Expo</Text>
+      <SigneInStack/>      
     </View>
   );
 }
