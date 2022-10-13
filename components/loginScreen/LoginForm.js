@@ -4,7 +4,8 @@ import React, { useState } from 'react'
 import * as yup from 'yup'
 import { Formik } from 'formik'
 import Validator from 'email-validator'
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {  signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from '../../firebase'
 
 
 const LoginForm = ({navigation}) => {
@@ -13,31 +14,43 @@ const LoginForm = ({navigation}) => {
     password: yup.string().required().min(6, 'Your password has to be at least 8 characters')
   })
 
-  const auth = getAuth();
+
 
 
   const onLogin = async (email, password) => {
-    signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed in 
-      const user = userCredential.user;
-      console.log("Firebase login successful ")
-      // ...
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      Alert.alert(error.message)
-    })
-
-    // try {
-
-    //   await firebaseapp.auth().signInWithEmailAndPassword(email, password)
+    // signInWithEmailAndPassword(auth, email, password)
+    // .then((userCredential) => {
+    //   // Signed in 
+    //   const user = userCredential.user;
     //   console.log("Firebase login successful ")
-    // } catch(error) {
+    //   // ...
+    // })
+    // .catch((error) => {
+    //   const errorCode = error.code;
+    //   const errorMessage = error.message;
     //   Alert.alert(error.message)
+    // })
+    
 
-    // }
+    try {
+
+      await signInWithEmailAndPassword(auth, email, password)
+      console.log("Firebase login successful ")
+    } catch(error) {
+      Alert.alert(
+        "Oops ..",
+        "Invalid username or password",
+        [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel"
+          },
+          { text: "OK", onPress: () => console.log("OK Pressed") }
+        ]
+      );
+
+    }
   }
   return (
     <View style={styles.wrapper}>
